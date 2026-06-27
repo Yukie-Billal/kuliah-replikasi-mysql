@@ -17,6 +17,11 @@ docker exec -it mysql-master mysql -uroot -proot
 docker exec -it mysql-slave mysql -uroot -proot
 ```
 
+### Pengecekan
+```sql
+SHOW REPLICA STATUS\G
+```
+
 ## How to stop
 ```bash
 docker compose down
@@ -35,3 +40,5 @@ SOURCE_AUTO_POSITION=1;
 
 START REPLICA;
 ```
+
+
