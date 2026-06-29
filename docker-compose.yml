@@ -49,6 +49,7 @@ services:
 
     volumes:
       - slave-data:/var/lib/mysql
+      - ./slave/init:/docker-entrypoint-initdb.d
 
     networks:
       - replication-network
