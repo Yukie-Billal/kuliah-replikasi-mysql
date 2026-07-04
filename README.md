@@ -26,6 +26,7 @@ SHOW REPLICA STATUS\G
 ```bash
 docker compose down
 ```
+NOTE : gunakan `-v` jika ingin menghapus beserta volumes dan menguji dari awal
 
 
 ## Mysql Slave Container

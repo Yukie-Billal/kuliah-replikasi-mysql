@@ -18,10 +18,18 @@ services:
       --binlog-format=ROW
       --gtid-mode=ON
       --enforce-gtid-consistency=ON
+      --auto_increment_increment=2
+      --auto_increment_offset=1
 
     volumes:
       - master-data:/var/lib/mysql
       - ./master/init:/docker-entrypoint-initdb.d
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
     networks:
       - replication-network
@@ -39,17 +47,42 @@ services:
 
     command: >
       --server-id=2
-      --relay-log=relay-bin
-      --read-only=ON
+      --log-bin=mysql-bin
+      --binlog-format=ROW
       --gtid-mode=ON
       --enforce-gtid-consistency=ON
-
-    depends_on:
-      - mysql-master
+      --auto_increment_increment=2
+      --auto_increment_offset=2
 
     volumes:
       - slave-data:/var/lib/mysql
       - ./slave/init:/docker-entrypoint-initdb.d
+
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+    networks:
+      - replication-network
+
+  mysql-setup:
+    image: mysql:8.0
+    container_name: mysql-setup
+
+    depends_on:
+      mysql-master:
+        condition: service_healthy
+      mysql-slave:
+        condition: service_healthy
+
+    volumes:
+      - ./setup.sh:/setup.sh:ro
+
+    command: sh /setup.sh
+
+    restart: "no"
 
     networks:
       - replication-network
