@@ -67,26 +67,6 @@ services:
     networks:
       - replication-network
 
-  mysql-setup:
-    image: mysql:8.0
-    container_name: mysql-setup
-
-    depends_on:
-      mysql-master:
-        condition: service_healthy
-      mysql-slave:
-        condition: service_healthy
-
-    volumes:
-      - ./setup.sh:/setup.sh:ro
-
-    command: sh /setup.sh
-
-    restart: "no"
-
-    networks:
-      - replication-network
-
 volumes:
   master-data:
   slave-data:
