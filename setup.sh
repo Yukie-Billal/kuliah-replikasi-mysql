@@ -2,7 +2,8 @@
 
 echo "Waiting for mysql-master..."
 
-until mysqladmin ping -h mysql-master -urepl -prepl123 --silent; do
+until mysqladmin ping -h mysql-master -urepl -prepl123 --silent
+do
     sleep 2
 done
 
@@ -10,14 +11,16 @@ echo "mysql-master is ready."
 
 echo "Waiting for mysql-slave..."
 
-until mysqladmin ping -h mysql-slave -urepl -prepl123 --silent; do
+until mysqladmin ping -h mysql-slave -urepl -prepl123 --silent
+do
     sleep 2
 done
 
 echo "mysql-slave is ready."
 
-echo "Configuring slave"
-mysql -h mysql-slave -uroot -proot <<EOF
+echo "Configuring slave..."
+
+mysql -h mysql-slave -uroot -proot <<'EOF'
 STOP REPLICA;
 RESET REPLICA ALL;
 
@@ -33,9 +36,9 @@ EOF
 
 echo "Replication slave configured."
 
+echo "Configuring master..."
 
-echo "Configuring master"
-mysql -h mysql-master -uroot -proot <<EOF
+mysql -h mysql-master -uroot -proot <<'EOF'
 STOP REPLICA;
 RESET REPLICA ALL;
 
